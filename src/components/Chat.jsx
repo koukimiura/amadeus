@@ -16,9 +16,9 @@ const Chat = (props) =>{
         	<ListItemAvatar>
         	{(()=>{
 				if (happyEnd && check){
-					return (<Avatar alt="icon" src={dereImage}/>);
+					return (<Avatar alt="icon" src={dereImage} />);
 				} else if (check){
-					return(<Avatar alt="icon" src={kurisu} />);
+					return(<Avatar alt="icon" src={kurisu} onClick={props.onClick}/>);
 				} else {
 					return(<Avatar alt="icon" src={defaultImage} />);
 				}

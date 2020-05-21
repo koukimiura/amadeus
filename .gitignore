@@ -11,6 +11,10 @@
 # production
 /build
 
+#slack
+src/slack/webhookConfig.js
+
+
 # misc
 .DS_Store
 .env.local

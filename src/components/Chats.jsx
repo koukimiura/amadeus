@@ -20,7 +20,7 @@ const Chats = (props) => {
 	return(
 		<List className={classes.chats} id={"scroll-area"}>
 			{props.chats.map((value, index)=> {
-				return <Chat text={value.text} key={index.toString()} type={value.type}/>
+				return <Chat text={value.text} key={index.toString()} type={value.type} onClick={props.onClick}/>
 			})}
     	</List>
 		);

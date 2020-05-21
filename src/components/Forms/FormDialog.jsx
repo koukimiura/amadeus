@@ -5,8 +5,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {WEBHOOK_URL} from '../../slack/webhookConfig';
 
-
+console.log(WEBHOOK_URL)
 
 const FormDialog = (props) => {
 	const[name, setName] = useState("");
@@ -53,10 +54,7 @@ const FormDialog = (props) => {
 	//テキストをslackへ送信
 	const inputSubmit=()=> {
 		const isBlank = blankCheck(name, email, description)
-		console.log(isBlank)
 		const correctEmail = emailCheck(email);
-		const url = 
-
 		if (isBlank) {
 			window.alert("空白の箇所があります。")
 			return false
@@ -70,7 +68,7 @@ const FormDialog = (props) => {
 							"emailアドレス:" + email + "\n"+
 							"お問合わせ内容:\n" + description 
 					}
-			fetch(url, {
+			fetch(WEBHOOK_URL, {
 				method: "POST",
 				body: JSON.stringify(payload)
 			}).then(()=> {

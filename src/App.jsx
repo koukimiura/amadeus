@@ -1,42 +1,68 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import './assets/styles/style.css'
 import {OptionsList, Chats, Modal} from './components/index';
-import defaultDataset from './dataset.js';
 import {FormDialog} from './components/Forms/index';
-
+import {db} from './firebase/index.js';
 
 
 const App = () => {
+
   const [options, setOptions] = useState([]);
   const [chats, setChats] = useState([]);
   const [currentId, setCurrentId] = useState("first");
-  const [dataset, setDataset] = useState(defaultDataset);
+  const [dataset, setDataset] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [contact, setContact] = useState(false);
-
+  const [count, setCount] = useState(0);
+  const [message, setMessage] = useState(false);
 
   // 画像モーダルを開くCallback関数
-  const handleModalOpen = useCallback(() => {
+  const handleModalOpen = useCallback((messageReceiver) => {
     setModalOpen(true)
   },[setModalOpen]);
 
+
+
   // 画像モーダルを閉じるCallback関数
   const handleModalClose = useCallback(() => {
-    setModalOpen(false)
-  },[setModalOpen]);
+    setModalOpen(false);
+    defaultMessageset();
+   
 
+  },[setModalOpen]);
 
 
 
   // 問い合わせフォーム用モーダルを開くCallback関数
-  const handleContactOpen =useCallback(() => {
+  const handleContactOpen = useCallback(() => {
     setContact(true);
   },[setContact]);
 
   // 問い合わせフォーム用モーダルを閉じるCallback関数
-  const handleContactClose =useCallback(() => {
+  const handleContactClose = useCallback(() => {
       setContact(false);
   },[setContact]);
+
+
+
+
+  const anglyMessageset = () => {
+      setMessage(true);
+      setCount(0);
+  }
+
+  const defaultMessageset = () => {
+    setMessage(false);
+  };
+
+  const countUp = () => {
+    setCount(prev => prev + 1);
+    console.log(count);
+    if (count >= 5){
+      handleModalOpen();
+      anglyMessageset();
+    }
+  }
 
 
 
@@ -111,14 +137,28 @@ const App = () => {
 
   // componentDidMount
   useEffect(()=>{
-    const initDataset = dataset[currentId]
-    displayNextQuestion(initDataset, dataset[currentId]);
 
-    // addChats({
-    //   text: initDataset.question,
-    //   type: "question"
-    // })
+    //データ取得を待ちたい。async付きの即時関数を使用
+    (async()=>{
 
+      const initDataset = {};
+
+
+      //非同期処理
+      await db.collection('questions').get().then(snapshot => {
+              snapshot.forEach(doc => {
+                // console.log(doc.id, '=>', doc.data());
+                //initDatasetオブジェクトでkeyをdoc.idにして、valueをdoc.dataに指定する
+                initDataset[doc.id] = doc.data();
+              })
+            });
+
+      //console.log(initDataset)
+      setDataset(initDataset);
+
+      //引数nextDatasetにはstate更新にtimelogが出るためiniDatesetを使用。
+      displayNextQuestion(initDataset[currentId], currentId); 
+    })();
   },[]);
 
 
@@ -137,9 +177,9 @@ const App = () => {
   return (
     <section className="c-section">
       <div className="c-box">
-        <Chats chats={chats}/>
+        <Chats chats={chats} onClick={countUp}/>
         <OptionsList options={options} select={selectOption} />
-        <Modal modalOpen={modalOpen} handleModalOpen={handleModalOpen} handleModalClose={handleModalClose}/>
+        <Modal modalOpen={modalOpen} handleModalOpen={handleModalOpen} handleModalClose={handleModalClose} message={message}/>
         <FormDialog contact={contact} handleContactOpen={handleContactOpen} handleContactClose={handleContactClose}/>
       </div>
     </section>

@@ -8,10 +8,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const Modal = (props) => {
-	return(
+	const defaultMessage = "おめでとうございます。 牧瀬紅莉栖がデレました。!!!!";
+    const anglyMessage = "どこ触ってんのよ! バカなの？ 死ぬの!?";
 
+
+	return(
 	      <Dialog open={props.modalOpen} onClose={props.handleModalClose} >
-	        <DialogTitle id="alert-dialog-title" className="dere">{"おめでとうございます。 牧瀬紅莉栖がデレました。!!!!"}</DialogTitle>
+	        <DialogTitle id="alert-dialog-title" className="dere">{props.message? (anglyMessage):(defaultMessage)}</DialogTitle>
 	        <DialogContent>
 	            <img alt="dereImage"src={dereImage}/>
 	        </DialogContent>
