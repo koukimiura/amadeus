@@ -1,5 +1,7 @@
 # amadeus
 
+<img width="1278" alt="amadeus" src="https://user-images.githubusercontent.com/50481755/103150082-bc5f1c80-47b3-11eb-9263-8a5a1dbc02f3.png">
+
 # 概要
 
 - ユーザーに質問を投げて自動で応答するチャットボット
